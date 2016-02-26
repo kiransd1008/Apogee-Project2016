@@ -1,6 +1,6 @@
 int D3=7,D2=6,D1=5,D0=4;
 
-int ModuleVcc=;
+int ModuleVcc;
 int sensorPin = A2;
 
 //int waterLevel = 1023;    //zero in water and 1023 in Dry Soil
@@ -11,23 +11,26 @@ void setup() {
   Serial.begin(9600);
   pinMode(sensorVcc, OUTPUT);
   pinMode(sensorPin, INPUT);
+  pinMode(ModuleVcc, OUTPUT);
   digitalWrite(sensorVcc, LOW);
+  digitalWrite(ModuleVcc,);
 for(int count=0;count<4;count++)
 {
   pinMode(count+4,OUTPUT);
   digitalWrite(count+4,LOW);
 }
   
+Serial.print("reciever module is ON");
 }
 
 void loop() {
-  for(int count=0;count<4;count++)
-     digitalWrite(count+4,LOW);
+  
   digitalWrite(sensorVcc,HIGH);
+  Serial.print("MoistureSensor is on");
   
-  Serial.println(analogRead(sensorPin));
-  
-  
+  Serial.println("SensorReading = ");
+  Serial.print(analogRead(sensorPin));
+
   if(analogRead(sensorPin)>1000)
     waterPercentage=4;
   else if(analogRead(sensorPin)>1023*0.75)
@@ -39,6 +42,10 @@ void loop() {
   else (analogRead(sensorPin)>0)
     waterPercentage=0;
 
+Serial.println("MoistureSesor is OFF");
+digitalWrite(sensorVcc,LOW);
+  
+//delay(2000);
 if(waterPercentage!=0)
 {
   for(int count=0;count<waterPercentage;count++)
@@ -57,22 +64,10 @@ else
       i++;
   }
 }
-  Serial.print("RequiredLevel :");
-  Serial.println(requiredLevel);
-  digitalWrite(sensorVcc, HIGH);
-  Serial.println("sensor : ON");
-  waterLevel = analogRead(A2);
-  Serial.print("waterLevel : ");
-  Serial.println(waterLevel);
-  digitalWrite(sensorVcc, LOW);
-  Serial.println("sensor: OFF");
+ delay(5000); 
+for(int count=0;count<4;count++)
+     digitalWrite(count+4,LOW);
 
-
-  if (waterLevel > requiredLevel) {
-    digitalWrite(motorPin, HIGH);
-    Serial.println("Motor has started");
-  }
-  else
-    digitalWrite(motorPin, LOW);
-  delay(2 * 60 * 1000);
+if(waterPercentage!=0)
+    delay(2 * 60 * 1000);
 }
