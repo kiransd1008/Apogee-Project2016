@@ -28,8 +28,13 @@ void setup() {
     Serial.print("reference Level is ");  
     Serial.println(ReferenceLevel);
   for (int i = 4; i < 8; i++)
+    {
+      digitalWrite(i,LOW);
+    }
+  for (int i = 4; i < 8; i++)
       pinMode(i, INPUT);
   //while(ReceivingSignal()==0);
+  
   
 }
 
@@ -95,10 +100,11 @@ int setReferenceWaterLevel(){
       LastButtonState=ButtonState;
     }
     //display(counter);
-    delay(500);
+    //delay(500);
     display(0);
+    delay(1000);
     display(counter);
-    delay(500);
+    delay(1000);
     display(0);
      counter=counter%5;
  return counter;   
