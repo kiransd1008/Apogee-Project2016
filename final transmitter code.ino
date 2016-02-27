@@ -1,4 +1,4 @@
-int D3=7,D2=6,D1=5,D0=4;
+//D3=7,D2=6,D1=5,D0=4;
 
 int ModuleVcc=A5;
 int sensorPin = A2;
@@ -13,46 +13,47 @@ void setup() {
   pinMode(sensorPin, INPUT);
   pinMode(ModuleVcc, OUTPUT);
   digitalWrite(sensorVcc, LOW);
-  digitalWrite(ModuleVcc,);
+  digitalWrite(ModuleVcc,LOW);
 for(int count=0;count<4;count++)
 {
   pinMode(count+4,OUTPUT);
   digitalWrite(count+4,LOW);
 }
   
-Serial.print("transmitter module is ON");
+Serial.println("transmitter module is ON");
 }
 
 void loop() 
 {
       digitalWrite(sensorVcc,HIGH);
-      Serial.print("MoistureSensor is on");
+      Serial.println("MoistureSensor is on");
       
-      Serial.println("SensorReading = ");
-      Serial.print(analogRead(sensorPin));
+      Serial.print("SensorReading =  ");
       int sensorReading=analogRead(sensorPin);
-      
+      Serial.println(sensorReading);
       digitalWrite(sensorVcc,LOW);
-      Serial.print("MoistureSensor is OFF");
-      
-      if(sensorReading>1023*0.75)
-        waterLevel=4;
-      else if(sensorReading>1023*0.5)
-        waterLevel=3;
-      else if(sensorReading>1023*0.25)
-        waterLevel=2;
-      else
+      Serial.println("MoistureSensor is OFF");
+      digitalWrite(ModuleVcc,HIGH);
+      if(sensorReading>350)
+        waterLevel=0;
+      else if(sensorReading>1023*0.75*0.36)
         waterLevel=1;
-    
-      
+      else if(sensorReading>1023*0.18)
+        waterLevel=2;
+      else if(sensorReading>1023*0.25*0.36)
+        waterLevel=3;
+      else
+        waterLevel=4;
+    Serial.print("waterLevel  ");
+    Serial.println(waterLevel);
+      Serial.println(" ");
+    Serial.println(" ");
     if(waterLevel!=0)
       for(int count=0;count<waterLevel;count++)
           digitalWrite(count+4,HIGH);
-}
- delay(5000); 
-for(int count=0;count<4;count++)
-     digitalWrite(count+4,LOW);
+     else
+     for(int count=0;count<4;count++)
+          digitalWrite(count+4,LOW);
 
-if(waterPercentage!=0)
-    delay(2 * 60 * 1000);
+    delay(60*1000);    //delay for one minute
 }
