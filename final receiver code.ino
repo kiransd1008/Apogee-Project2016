@@ -4,7 +4,7 @@ int motorPin = 12;
 int waterLevel = 1023;    //zero in water and 1023 in Dry Soil
 int ReceivingSignal=8;
 int PushButton=13;
-int ReferenceLevel;
+int ReferenceLevel=0;
 int Signal;
 void setup() {
   Serial.begin(9600);
@@ -21,9 +21,10 @@ void setup() {
     }
   Serial.println("set reference level");
   Serial.println("push the push button for changing the waterlevel by 25 percent");
-  Serial.printl("Tap the push button for continuously 3 seconds to save the Reference Waterlevel");
+  Serial.println("Tap the push button for continuously 3 seconds to save the Reference Waterlevel");
    while(digitalRead(PushButton)==0);
-   ReferenceLevel=setReferenceWaterLevel();
+   //setReferenceWaterLevel();
+   ReferenceLevel = setReferenceWaterLevel();
     Serial.print("reference Level is ");  
     Serial.println(ReferenceLevel);
   for (int i = 4; i < 8; i++)
@@ -41,7 +42,7 @@ void loop() {
   digitalWrite(RxModuleVcc,LOW);
   Serial.println("RxModule is turned OFF");
 
-  if (Signal < referenceLevel) {
+  if (Signal < ReferenceLevel) {
     digitalWrite(motorPin, HIGH);
     Serial.println("Motor has started");
   }
@@ -61,7 +62,7 @@ void display(int leds){
   return;
 }
 int ReadSignal(){
-  while(digitalRead(ReceivingSigal)==0);
+  while(digitalRead(ReceivingSignal)==0);
   int level=0;
   for(int i=0;i<4;i++)
     level+=digitalRead(i+4);
@@ -84,7 +85,7 @@ int setReferenceWaterLevel(){
           count1++;
           delay(400);
         }
-      lastButtonState=ButtonState;
+      LastButtonState=ButtonState;
     }
     //display(counter);
     delay(500);
@@ -92,5 +93,6 @@ int setReferenceWaterLevel(){
     display(counter);
     delay(500);
     display(0);
-    return (counter%5);
+     counter=counter%5;
+ return counter;   
 }
